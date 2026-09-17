@@ -1,0 +1,13 @@
+{/* MEDIA TAB CONTENT */}
+              <Tabs.Content value="media" className="outline-none">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {['/ny_skyscrapers.jpg', '/ny_skyline.jpg', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'].map((img, idx) => (
+                    <div key={`media-item-${idx}`} className="aspect-square rounded-2xl overflow-hidden bg-slate-900 group relative cursor-pointer">
+                      <img src={img} alt={`Media gallery ${idx + 1}`} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <Eye className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Tabs.Content>

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "social-post-card",
+    "type": "registry:component",
+    "title": "Social Post Card",
+    "description": "MNC-grade social media post card with reaction popover, right-side comments panel, audio voice notes player, and lightbox.",
+    "category": "Social & Feed",
+    "dependencies": ["lucide-react", "clsx", "tailwind-merge"],
+    "files": ["src/components/social/SocialPostCard.tsx", "src/components/social/types.ts"]
+  },
+  {
+    "name": "pricing-table",
+    "type": "registry:component",
+    "title": "Pricing Table",
+    "description": "MNC-grade pricing table with monthly/yearly toggle, feature matrix, popular tier badges, and commercial monetization flow.",
+    "category": "Monetization & Sales",
+    "dependencies": ["lucide-react", "clsx", "tailwind-merge"],
+    "files": ["src/components/monetization/PricingTable.tsx", "src/components/monetization/types.ts"]
+  }
+]

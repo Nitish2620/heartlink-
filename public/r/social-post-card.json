@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "social-post-card",
+  "type": "registry:block",
+  "title": "Social Post Card",
+  "description": "An MNC-grade social media feed post card component with reactions, right-side comments panel, voice notes, and media lightbox.",
+  "dependencies": ["lucide-react", "clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "registry/default/blocks/social-post-card/social-post-card.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/social-post-card/social-post-card.tsx"
+    },
+    {
+      "path": "registry/default/blocks/social-post-card/types.ts",
+      "type": "registry:lib",
+      "target": "components/blocks/social-post-card/types.ts"
+    }
+  ]
+}

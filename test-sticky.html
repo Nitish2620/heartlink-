@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  .scroll-container {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid black;
+    position: relative;
+  }
+  .inner-container {
+    height: 1000px;
+    position: relative;
+  }
+  .abs-item {
+    position: absolute;
+    top: 100px;
+    left: 10px;
+    right: 10px;
+    border: 1px solid red;
+    display: flex;
+    align-items: stretch;
+  }
+  .content {
+    height: 500px;
+    flex: 1;
+    background: lightblue;
+  }
+  .menu-track {
+    width: 50px;
+    background: yellow;
+  }
+  .menu {
+    position: sticky;
+    top: 10px;
+    background: red;
+    height: 30px;
+    width: 30px;
+  }
+</style>
+</head>
+<body>
+  <div class="scroll-container">
+    <div class="inner-container">
+      <div class="abs-item">
+        <div class="content">Content</div>
+        <div class="menu-track">
+          <div class="menu"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+  // Mock Data
+  const mockPosts: PostItem[] = useMemo(() => [
+    {
+      id: 'p1',
+      author: profileContext === 'server' ? (profile.serverNickname || profile.name) : profile.name,
+      avatar: profile.avatar,
+      timestamp: '2 hours ago',
+      content: 'Just launched our MNC-grade Nitro Profile Dashboard with Next.js, Tailwind CSS & Radix UI primitives! Zero Cumulative Layout Shift (CLS) and 60 FPS frame rates 🔥 What do you think?',
+      likes: 342,
+      comments: 28,
+      shares: 14,
+      isNitroClip: true,
+      mediaUrl: '/ny_skyline.jpg'
+    },
+    {
+      id: 'p2',
+      author: profileContext === 'server' ? (profile.serverNickname || profile.name) : profile.name,
+      avatar: profile.avatar,
+      timestamp: 'Yesterday at 6:30 PM',
+      content: 'Configured automated IndexedDB state auto-persistence for 100k+ records. Hydrates in < 20ms with progressive windowing virtualization 🚀',
+      likes: 890,
+      comments: 64,
+      shares: 42,
+      mediaUrl: '/ny_skyscrapers.jpg'
+    }
+  ], [profileContext, profile.name, profile.serverNickname, profile.avatar]);
+
+  const mockSoundboard: NitroSound[] = useMemo(() => [
+    { id: 'sb1', name: 'Airhorn Blast', emoji: '📢', freq: 750, category: 'Meme' },
+    { id: 'sb2', name: 'Quack Quack', emoji: '🦆', freq: 440, category: 'Meme' },
+    { id: 'sb3', name: 'Victory Horn', emoji: '🎺', freq: 880, category: 'Gaming' },
+    { id: 'sb4', name: 'GG WP Chime', emoji: '🎮', freq: 620, category: 'Gaming' },
+    { id: 'sb5', name: 'Super Laser Blast', emoji: '⚡', freq: 950, category: 'Nitro Special', lockedForFree: !isNitroPro }
+  ], [isNitroPro]);
+
+  const mockCollectibles: NitroSticker[] = useMemo(() => [
+    { id: 's1', name: 'Cyberpunk Neon Wave', emoji: '🌌', rarity: 'Nitro Exclusive', animated: true },
+    { id: 's2', name: 'Super Reaction Spark', emoji: '✨', rarity: 'Legendary', animated: true },
+    { id: 's3', name: 'Golden Dragon Flame', emoji: '🐉', rarity: 'Legendary', animated: true },
+    { id: 's4', name: 'HypeSquad Bravery Badge', emoji: '⚡', rarity: 'Rare', animated: false },
+    { id: 's5', name: 'Active Developer Badge', emoji: '💻', rarity: 'Rare', animated: false },
+    { id: 's6', name: 'Early Supporter 2017', emoji: '👾', rarity: 'Nitro Exclusive', animated: true }
+  ], []);
+

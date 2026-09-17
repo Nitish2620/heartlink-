@@ -1,0 +1,8 @@
+# UI Kit AI Architecture Rules
+
+- Use semantic HTML tags at all times (e.g., `<button>` for actions, `<nav>` for links, `<article>` for posts).
+- Always use standard Tailwind utility classes. Avoid implicit magic values or arbitrary bracket notation.
+- Use explicit data attributes for state handling (e.g., `data-state="open"`).
+- All components must implement standard ARIA roles for accessibility (`role="list"`, `role="log"`, `aria-live="polite"`).
+- Every component must export strict TypeScript interfaces for all props (`ChatListCardProps`, `SocialPostProps`, `PricingTableProps`).
+- All list and stream components must handle 10,000+ mock records without DOM lag using memoized row rendering (`React.memo`) and debounced search indexing.

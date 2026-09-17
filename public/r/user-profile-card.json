@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "user-profile-card",
+  "type": "registry:block",
+  "title": "User Profile Card (Nitro Edition)",
+  "description": "An MNC-grade creator & user profile card with Discord Nitro features, Radix UI primitives, dynamic avatar decorations, and responsive metrics dashboard.",
+  "dependencies": ["@radix-ui/react-tabs", "@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-tooltip", "framer-motion", "lucide-react", "clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "registry/default/blocks/user-profile-card/user-profile-card.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/user-profile-card/user-profile-card.tsx"
+    },
+    {
+      "path": "registry/default/blocks/user-profile-card/types.ts",
+      "type": "registry:lib",
+      "target": "components/blocks/user-profile-card/types.ts"
+    }
+  ]
+}

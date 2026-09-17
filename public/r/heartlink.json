@@ -1,0 +1,115 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "heartlink",
+  "type": "registry:block",
+  "title": "HeartLink (Dating Hybrid Application)",
+  "description": "MNC-grade Tinder + Bumble + Hinge hybrid application featuring deep profile prompts, 72-hour HeartPulse countdowns, anti-ghosting AI, and speed pulse video dates.",
+  "dependencies": ["lucide-react", "clsx", "tailwind-merge", "framer-motion", "@radix-ui/react-tabs", "@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu", "@radix-ui/react-tooltip"],
+  "files": [
+    {
+      "path": "registry/default/blocks/heartlink/heartlink-app.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/heartlink-app.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/heartlink-message-stream.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/heartlink-message-stream.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/virtualized-sidebar-list.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/virtualized-sidebar-list.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/avatar-with-fallback.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/avatar-with-fallback.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/chat-input-editor.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/chat-input-editor.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/decoration-picker-modal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/decoration-picker-modal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/twemoji-picker.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/twemoji-picker.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/db.ts",
+      "type": "registry:lib",
+      "target": "components/blocks/heartlink/db.ts"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/utils.ts",
+      "type": "registry:lib",
+      "target": "components/blocks/heartlink/utils.ts"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/types.ts",
+      "type": "registry:lib",
+      "target": "components/blocks/heartlink/types.ts"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/AIDateConciergeModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/AIDateConciergeModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/AntiGhostingPrompt.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/AntiGhostingPrompt.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/GroupHangoutsModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/GroupHangoutsModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/HeartLinkFeedView.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/HeartLinkFeedView.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/HeartPulseBanner.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/HeartPulseBanner.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/IntentFilterModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/IntentFilterModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/LocalEventsModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/LocalEventsModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/MatchCelebrationModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/MatchCelebrationModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/SafetyGuardianModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/SafetyGuardianModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/SpeedPulseDeckModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/SpeedPulseDeckModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/SpeedVideoDateModal.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/SpeedVideoDateModal.tsx"
+    }
+  ]
+}

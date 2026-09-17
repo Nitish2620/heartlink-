@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chat-list-card",
+  "type": "registry:block",
+  "title": "Chat List Card",
+  "description": "MNC-grade chat inbox card with online indicators, search filter, unread count badges, new chat modal, and live messenger stream panel.",
+  "dependencies": ["lucide-react", "clsx", "tailwind-merge"],
+  "files": [
+    {
+      "path": "registry/default/blocks/chat-list-card/chat-list-card.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/chat-list-card/chat-list-card.tsx"
+    },
+    {
+      "path": "registry/default/blocks/chat-list-card/types.ts",
+      "type": "registry:lib",
+      "target": "components/blocks/chat-list-card/types.ts"
+    }
+  ]
+}
