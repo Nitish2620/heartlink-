@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { RadarFeed } from './RadarFeed';
 import { VibeReelsFeed } from './VibeReelsFeed';
 import { BlindDateFeed } from './BlindDateFeed';
+import { TrustScoreBadge } from './TrustScoreBadge';
 
 export interface HeartLinkFeedViewProps {
   onSendOpener?: (authorName: string, promptText: string) => void;
@@ -23,6 +24,7 @@ export interface DatingFeedPost {
     location: string;
     distance: string;
     verified: boolean;
+    trustScore?: number;
     intent: 'Long-term relationship' | 'Deep connection' | 'Spontaneous fun';
   };
   timestamp: string;
@@ -71,6 +73,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
       location: 'Brooklyn, NY',
       distance: '2.8 miles away',
       verified: true,
+      trustScore: 92,
       intent: 'Long-term relationship'
     },
     timestamp: '2 hours ago',
@@ -93,6 +96,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
       location: 'SoHo, Manhattan',
       distance: '3.4 miles away',
       verified: true,
+      trustScore: 78,
       intent: 'Deep connection'
     },
     timestamp: '4 hours ago',
@@ -116,6 +120,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
       location: 'West Village, NY',
       distance: '1.9 miles away',
       verified: true,
+      trustScore: 45,
       intent: 'Spontaneous fun'
     },
     timestamp: '5 hours ago',
@@ -144,6 +149,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
       location: 'Greenpoint, Brooklyn',
       distance: '4.1 miles away',
       verified: true,
+      trustScore: 88,
       intent: 'Deep connection'
     },
     timestamp: '6 hours ago',
@@ -359,7 +365,12 @@ const StandardVibeCard = ({ post, onSendOpener, onProposeDate, onJoinGroup }: { 
             </div>
           </div>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 text-[10px] font-extrabold">{post.authorDetails.intent}</span>
+        <div className="flex flex-col items-end gap-2">
+          {post.authorDetails.trustScore && (
+            <TrustScoreBadge score={post.authorDetails.trustScore} size="sm" />
+          )}
+          <span className="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 text-[10px] font-extrabold">{post.authorDetails.intent}</span>
+        </div>
       </div>
 
       <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium leading-relaxed">{post.content}</p>

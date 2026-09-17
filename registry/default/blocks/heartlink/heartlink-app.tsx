@@ -1148,6 +1148,10 @@ function sanitizeLoadedChats(chats: ChatItem[]): ChatItem[] {
     inputRef.current?.focus();
   }, []);
 
+  const activeMatchesCount = useMemo(() => {
+    return chatList.filter(c => c.isMatch && (!c.expiresAt || c.expiresAt > Date.now())).length;
+  }, [chatList]);
+
   return (
     <TooltipProvider delayDuration={150}>
       <div className="w-full h-full font-sans relative flex gap-3 sm:gap-4 p-3 sm:p-4 bg-[#F4F5F8] dark:bg-slate-950 overflow-hidden">
@@ -1234,32 +1238,58 @@ function sanitizeLoadedChats(chats: ChatItem[]): ChatItem[] {
       <div className={`flex-1 bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col h-full min-h-0 overflow-hidden relative ${!selectedChatId && activeMainView === 'chat' ? 'hidden md:flex' : 'flex'}`}>
         
         {activeMainView === 'feed' ? (
-          <HeartLinkFeedView
-            onSendOpener={(authorName, promptText) => {
-              const matchingChat = chatList.find(c => c.name.toLowerCase().includes(authorName.toLowerCase())) || chatList[0];
-              if (matchingChat) {
-                setSelectedChatId(matchingChat.id);
-                setActiveMainView('chat');
-                handleSendOpenerFromPrompt('Feed Post Opener', promptText);
-              }
-            }}
-            onProposeDate={(dateSpotName, location) => {
-              const targetChat = selectedChat || chatList[0];
-              if (targetChat) {
-                setSelectedChatId(targetChat.id);
-                setActiveMainView('chat');
-                handleSendMessage(undefined, `🥂 Date Proposal: ${dateSpotName} (${location})\nWould you like to check this out together? ✨`);
-              }
-            }}
-            onJoinGroup={(groupTitle) => {
-              const targetChat = selectedChat || chatList[0];
-              if (targetChat) {
-                setSelectedChatId(targetChat.id);
-                setActiveMainView('chat');
-                handleSendMessage(undefined, `👯 Double Date & Group Invite: ${groupTitle}\nWant to join as a pair with me? ☕✨`);
-              }
-            }}
-          />
+          <div className="relative w-full h-full flex flex-col">
+            <HeartLinkFeedView
+              onSendOpener={(authorName, promptText) => {
+                const matchingChat = chatList.find(c => c.name.toLowerCase().includes(authorName.toLowerCase())) || chatList[0];
+                if (matchingChat) {
+                  setSelectedChatId(matchingChat.id);
+                  setActiveMainView('chat');
+                  handleSendOpenerFromPrompt('Feed Post Opener', promptText);
+                }
+              }}
+              onProposeDate={(dateSpotName, location) => {
+                const targetChat = selectedChat || chatList[0];
+                if (targetChat) {
+                  setSelectedChatId(targetChat.id);
+                  setActiveMainView('chat');
+                  handleSendMessage(undefined, `🥂 Date Proposal: ${dateSpotName} (${location})\nWould you like to check this out together? ✨`);
+                }
+              }}
+              onJoinGroup={(groupTitle) => {
+                const targetChat = selectedChat || chatList[0];
+                if (targetChat) {
+                  setSelectedChatId(targetChat.id);
+                  setActiveMainView('chat');
+                  handleSendMessage(undefined, `👯 Double Date & Group Invite: ${groupTitle}\nWant to join as a pair with me? ☕✨`);
+                }
+              }}
+            />
+            {activeMatchesCount >= 3 && (
+              <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/40 dark:bg-slate-900/40 backdrop-blur-md p-6 text-center animate-in fade-in duration-500">
+                <div className="bg-white/80 dark:bg-slate-800/80 p-8 rounded-[32px] shadow-2xl max-w-md w-full border border-white/50 dark:border-slate-700/50 backdrop-blur-xl relative overflow-hidden flex flex-col items-center">
+                  <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-purple-600/10 z-0" />
+                  <div className="relative z-10 flex flex-col items-center">
+                    <div className="w-20 h-20 bg-gradient-to-br from-rose-400 to-purple-600 rounded-3xl rotate-3 flex items-center justify-center mb-6 shadow-xl shadow-purple-500/30">
+                      <Heart className="w-10 h-10 text-white fill-white -rotate-3" />
+                    </div>
+                    <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-4">Focus on Quality</h3>
+                    <p className="text-slate-600 dark:text-slate-300 font-medium mb-8 leading-relaxed text-base">
+                      You have <span className="font-bold text-purple-600 dark:text-purple-400">{activeMatchesCount} active matches</span> right now. To encourage meaningful connections, Discover is paused until you have fewer active matches.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setActiveMainView('chat')}
+                      className="w-full py-4 bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 text-white rounded-2xl font-bold tracking-wide transition shadow-lg shadow-purple-500/20 active:scale-95 text-lg flex items-center justify-center gap-2"
+                    >
+                      <Sparkles className="w-5 h-5 fill-current" />
+                      View My Matches
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         ) : selectedChat ? (
           <>
             {/* Header Bar */}

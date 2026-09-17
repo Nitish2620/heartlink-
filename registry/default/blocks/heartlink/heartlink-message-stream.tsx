@@ -483,6 +483,7 @@ MessageBubble.displayName = 'MessageBubble';
 interface VirtualizedMessageStreamProps {
   messages: Message[];
   isTyping: boolean;
+  isAITyping?: boolean;
   selectedChatId: string;
   selectedChatName: string;
   selectedChatAvatar: string;
@@ -504,6 +505,7 @@ interface VirtualizedMessageStreamProps {
 export const VirtualizedMessageStream = React.memo(({
   messages,
   isTyping,
+  isAITyping,
   selectedChatId,
   selectedChatName,
   selectedChatAvatar,
@@ -707,10 +709,22 @@ export const VirtualizedMessageStream = React.memo(({
       </div>
 
       {isTyping && (
-        <div className="flex flex-col items-start mt-2">
+        <div className="flex flex-col items-start mt-2 px-4 sm:px-6">
           <div className="flex items-end gap-2 mb-1">
             <AvatarWithFallback name={selectedChatName} src={selectedChatAvatar} size="w-6 h-6"/>
             <span className="text-[10px] text-slate-400 font-medium">{selectedChatName} is typing</span>
+          </div>
+          <TypingIndicator />
+        </div>
+      )}
+
+      {isAITyping && (
+        <div className="flex flex-col items-start mt-2 mb-2 px-4 sm:px-6 animate-in fade-in duration-300">
+          <div className="flex items-end gap-2 mb-1">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center shadow-sm border border-white dark:border-slate-800">
+              <Sparkles className="w-3.5 h-3.5 text-white fill-white" />
+            </div>
+            <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold tracking-wider uppercase">Cupid AI is crafting an icebreaker...</span>
           </div>
           <TypingIndicator />
         </div>

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import type { DatingFeedPost } from './HeartLinkFeedView';
 import { cn } from '@/lib/utils';
+import { TrustScoreBadge } from './TrustScoreBadge';
 
 // --- Orbiting Circles Subcomponent ---
 interface OrbitingCirclesProps {
@@ -241,6 +242,7 @@ const EXTRA_RADAR_MATCHES: DatingFeedPost[] = [
       location: 'Brooklyn, NY',
       distance: '0.8 miles away',
       verified: true,
+      trustScore: 95,
       intent: 'Long-term relationship'
     },
     timestamp: '15 mins ago',
@@ -259,6 +261,7 @@ const EXTRA_RADAR_MATCHES: DatingFeedPost[] = [
       location: 'SoHo, NY',
       distance: '1.4 miles away',
       verified: true,
+      trustScore: 82,
       intent: 'Deep connection'
     },
     timestamp: '42 mins ago',
@@ -277,6 +280,7 @@ const EXTRA_RADAR_MATCHES: DatingFeedPost[] = [
       location: 'West Village, NY',
       distance: '2.1 miles away',
       verified: true,
+      trustScore: 68,
       intent: 'Spontaneous fun'
     },
     timestamp: '1 hour ago',
@@ -295,6 +299,7 @@ const EXTRA_RADAR_MATCHES: DatingFeedPost[] = [
       location: 'Greenpoint, NY',
       distance: '3.2 miles away',
       verified: true,
+      trustScore: 89,
       intent: 'Deep connection'
     },
     timestamp: '2 hours ago',
@@ -686,7 +691,12 @@ export const RadarFeed: React.FC<RadarFeedProps> = ({ posts, onProfileClick }) =
                 <div>
                   <h3 className="text-lg font-black flex items-center gap-1.5">
                     {selectedMatch.authorDetails.name}, {selectedMatch.authorDetails.age}
-                    <ShieldCheck className="w-4 h-4 text-blue-400" />
+                    {selectedMatch.authorDetails.verified && <ShieldCheck className="w-4 h-4 text-blue-400" />}
+                    {selectedMatch.authorDetails.trustScore && (
+                      <div className="ml-2">
+                        <TrustScoreBadge score={selectedMatch.authorDetails.trustScore} size="sm" />
+                      </div>
+                    )}
                   </h3>
                   <p className="text-xs text-rose-400 font-semibold flex items-center gap-1 mt-0.5">
                     <MapPin className="w-3.5 h-3.5" /> {selectedMatch.authorDetails.distance}
