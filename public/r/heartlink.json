@@ -110,6 +110,21 @@
       "path": "registry/default/blocks/heartlink/components/SpeedVideoDateModal.tsx",
       "type": "registry:component",
       "target": "components/blocks/heartlink/components/SpeedVideoDateModal.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/RadarFeed.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/RadarFeed.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/VibeReelsFeed.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/VibeReelsFeed.tsx"
+    },
+    {
+      "path": "registry/default/blocks/heartlink/components/BlindDateFeed.tsx",
+      "type": "registry:component",
+      "target": "components/blocks/heartlink/components/BlindDateFeed.tsx"
     }
   ]
 }
