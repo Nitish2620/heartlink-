@@ -315,6 +315,7 @@ export function HeartLinkApp({
   const [isLoadingFromDB, setIsLoadingFromDB] = useState(true);
   const [isDBReady, setIsDBReady] = useState(false);
   const [typingState, setTypingState] = useState<Record<string, boolean>>({});
+  const [aiTypingState, setAiTypingState] = useState<Record<string, boolean>>({});
   const [showRightSidebar, setShowRightSidebar] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [profileModalChat, setProfileModalChat] = useState<ChatItem | null>(null);
@@ -965,11 +966,17 @@ function sanitizeLoadedChats(chats: ChatItem[]): ChatItem[] {
 
     const typingTimer = setTimeout(() => {
       setTypingState(prev => ({ ...prev, [targetChatId]: true }));
+      setAiTypingState(prev => ({ ...prev, [targetChatId]: true }));
     }, initialDelay);
     typingTimersRef.current[targetChatId] = typingTimer;
 
     const replyTimer = setTimeout(() => {
       setTypingState(prev => {
+        const next = { ...prev };
+        delete next[targetChatId];
+        return next;
+      });
+      setAiTypingState(prev => {
         const next = { ...prev };
         delete next[targetChatId];
         return next;
@@ -1686,6 +1693,7 @@ function sanitizeLoadedChats(chats: ChatItem[]): ChatItem[] {
               <VirtualizedMessageStream
                 messages={selectedChat.messages}
                 isTyping={typingState[selectedChat.id] || false}
+                isAITyping={aiTypingState[selectedChat.id] || false}
                 selectedChatId={selectedChatId ?? ''}
                 selectedChatName={selectedChat.name}
                 selectedChatAvatar={selectedChat.avatar}
