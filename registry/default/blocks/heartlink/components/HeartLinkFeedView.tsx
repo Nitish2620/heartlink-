@@ -1,7 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { SocialPostCard } from '../../social-post-card/social-post-card';
-import { Search, Flame, MapPin, Sparkles, Filter, Users, Ticket, MessageCircle, Heart } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Flame, MapPin, Sparkles, Navigation, Video, EyeOff } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+
+// Import our new sub-feeds
+import { RadarFeed } from './RadarFeed';
+import { VibeReelsFeed } from './VibeReelsFeed';
+import { BlindDateFeed } from './BlindDateFeed';
 
 export interface HeartLinkFeedViewProps {
   onSendOpener?: (authorName: string, promptText: string) => void;
@@ -70,7 +75,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
     },
     timestamp: '2 hours ago',
     content: 'Just spent the afternoon exploring vintage flea markets and hunting down analog film cameras. Here is my current weekend vibe audio note! 📷✨',
-    images: ['https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1516280440502-6c9fa1a33d9c?w=800&auto=format&fit=crop&q=80'], // Added video-like aesthetic image for reels
     voiceNoteUrl: 'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg',
     voiceDuration: '0:14',
     promptAnswer: {
@@ -115,6 +120,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
     },
     timestamp: '5 hours ago',
     content: 'Organizing a low-key 4-person espresso & matcha crawl this Sunday! Looking for another pair to join us ☕✨',
+    images: ['https://images.unsplash.com/photo-1507133750070-4ed0b48bb361?w=800&auto=format&fit=crop&q=80'],
     doubleDateGroup: {
       title: 'West Village Specialty Espresso Crawl',
       vibe: 'Coffee Crawl',
@@ -142,6 +148,7 @@ const SAMPLE_DATING_POSTS: DatingFeedPost[] = [
     },
     timestamp: '6 hours ago',
     content: 'Settling a debate with my friends: what is the single best first date atmosphere?',
+    images: ['https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop&q=80'],
     poll: {
       id: 'poll_date_vibe',
       question: 'Ideal First Date Vibe?',
@@ -160,14 +167,13 @@ export const HeartLinkFeedView: React.FC<HeartLinkFeedViewProps> = React.memo(({
   onProposeDate,
   onJoinGroup
 }) => {
-  const [feedTab, setFeedTab] = useState<'vibes' | 'spots'>('vibes');
+  type FeedMode = 'vibes' | 'radar' | 'reels' | 'blind';
+  const [feedTab, setFeedTab] = useState<FeedMode>('vibes');
   const [intentFilter, setIntentFilter] = useState<'all' | 'Long-term relationship' | 'Deep connection' | 'Spontaneous fun'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredPosts = useMemo(() => {
     return SAMPLE_DATING_POSTS.filter(post => {
-      // Tab filter
-      if (feedTab === 'spots' && !post.dateSpot && !post.doubleDateGroup) return false;
       // Intent filter
       if (intentFilter !== 'all' && post.authorDetails.intent !== intentFilter) return false;
       // Search filter
@@ -180,243 +186,222 @@ export const HeartLinkFeedView: React.FC<HeartLinkFeedViewProps> = React.memo(({
       }
       return true;
     });
-  }, [feedTab, intentFilter, searchQuery]);
+  }, [intentFilter, searchQuery]);
 
   return (
     <div className="w-full h-full flex flex-col bg-[#F4F5F8] dark:bg-slate-950 overflow-hidden font-sans">
       {/* Top Header Bar */}
-      <div className="p-4 sm:p-5 bg-white dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800 shrink-0 shadow-xs">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
+      <div className="p-4 sm:p-5 bg-white dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-800 shrink-0 shadow-xs z-10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
           <div>
             <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
               <span className="w-7 h-7 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 flex items-center justify-center text-white text-xs shadow-xs">
                 <Flame className="w-4 h-4 fill-white" />
               </span>
-              HeartLink Vibe Feed
+              HeartLink Discovery
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Discover real-time vibe notes, prompt answers, and local date spots from matches near you.
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+              Find your next match using dynamic reels, location radars, or blind dates.
             </p>
           </div>
 
-          {/* Dual Feed Tabs */}
-          <Tabs value={feedTab} onValueChange={(val) => setFeedTab(val as any)} className="w-full md:w-auto">
-            <TabsList className="grid grid-cols-2 w-full md:w-72 bg-[#F5F6F9] dark:bg-slate-800 p-1 rounded-2xl">
-              <TabsTrigger value="vibes" className="rounded-xl text-xs font-bold py-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-purple-600 dark:data-[state=active]:text-purple-300 data-[state=active]:shadow-2xs">
-                🔥 For You Vibes
+          {/* Discovery Modes Tabs */}
+          <Tabs value={feedTab} onValueChange={(val) => setFeedTab(val as FeedMode)} className="w-full md:w-auto">
+            <TabsList className="flex w-full md:w-auto bg-[#F5F6F9] dark:bg-slate-800 p-1 rounded-2xl overflow-x-auto hide-scrollbar border border-slate-200 dark:border-slate-700/50 shadow-inner">
+              <TabsTrigger value="vibes" className="rounded-xl text-xs font-bold py-2 px-4 flex items-center gap-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-rose-600 dark:data-[state=active]:text-rose-400 data-[state=active]:shadow-sm">
+                <Sparkles className="w-3.5 h-3.5" /> For You
               </TabsTrigger>
-              <TabsTrigger value="spots" className="rounded-xl text-xs font-bold py-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-purple-600 dark:data-[state=active]:text-purple-300 data-[state=active]:shadow-2xs">
-                📍 Date Spots
+              <TabsTrigger value="reels" className="rounded-xl text-xs font-bold py-2 px-4 flex items-center gap-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-fuchsia-600 dark:data-[state=active]:text-fuchsia-400 data-[state=active]:shadow-sm">
+                <Video className="w-3.5 h-3.5" /> Vibe Reels
+              </TabsTrigger>
+              <TabsTrigger value="radar" className="rounded-xl text-xs font-bold py-2 px-4 flex items-center gap-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 data-[state=active]:shadow-sm">
+                <Navigation className="w-3.5 h-3.5" /> Radar
+              </TabsTrigger>
+              <TabsTrigger value="blind" className="rounded-xl text-xs font-bold py-2 px-4 flex items-center gap-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-indigo-600 dark:data-[state=active]:text-indigo-400 data-[state=active]:shadow-sm">
+                <EyeOff className="w-3.5 h-3.5" /> Blind Date
               </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
 
-        {/* Search & Intent Filter Row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search vibes, locations, names..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#F5F6F9] dark:bg-slate-800 border-none pl-9 pr-4 py-2.5 rounded-2xl text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none focus:ring-2 focus:ring-purple-500/20 transition"
-            />
-          </div>
+        {/* Filter Row (Only show on 'vibes' or 'blind' modes where list sorting makes sense) */}
+        <AnimatePresence>
+          {(feedTab === 'vibes' || feedTab === 'blind') && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="flex flex-col sm:flex-row items-center justify-between gap-3 overflow-hidden"
+            >
+              <div className="relative w-full sm:w-72">
+                <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search vibes, locations, names..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#F5F6F9] dark:bg-slate-800 border-none pl-9 pr-4 py-2.5 rounded-2xl text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none focus:ring-2 focus:ring-purple-500/20 transition"
+                />
+              </div>
 
-          {/* Intent Filter Chips */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
-            {(['all', 'Long-term relationship', 'Deep connection', 'Spontaneous fun'] as const).map(intent => (
-              <button
-                key={intent}
-                type="button"
-                onClick={() => setIntentFilter(intent)}
-                className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition whitespace-nowrap cursor-pointer ${
-                  intentFilter === intent
-                    ? 'bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-2xs'
-                    : 'bg-[#F5F6F9] dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                }`}
-              >
-                {intent === 'all' ? '✨ All Intentions' : intent}
-              </button>
-            ))}
-          </div>
-        </div>
+              <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 hide-scrollbar">
+                {(['all', 'Long-term relationship', 'Deep connection', 'Spontaneous fun'] as const).map(intent => (
+                  <button
+                    key={intent}
+                    type="button"
+                    onClick={() => setIntentFilter(intent)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition whitespace-nowrap cursor-pointer ${
+                      intentFilter === intent
+                        ? 'bg-gradient-to-r from-rose-500 to-purple-600 text-white shadow-md'
+                        : 'bg-[#F5F6F9] dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {intent === 'all' ? '✨ All Intentions' : intent}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Feed Stream Content */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-3xl mx-auto w-full">
-        {filteredPosts.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 font-medium">
-            No feed posts match your filter query. Try selecting "✨ All Intentions".
-          </div>
-        ) : (
-          filteredPosts.map(post => (
-            <div key={post.id} className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 shadow-sm p-5 space-y-4">
-              {/* Dating Header Badge */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={post.authorDetails.avatar}
-                    alt={post.authorDetails.name}
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-purple-500/20 shadow-xs"
-                  />
-                  <div>
-                    <h3 className="font-black text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      {post.authorDetails.name}, {post.authorDetails.age}
-                      {post.authorDetails.verified && (
-                        <span className="w-4 h-4 rounded-full bg-blue-500 text-white text-[9px] font-bold inline-flex items-center justify-center" title="Verified Profile">
-                          ✓
-                        </span>
-                      )}
-                    </h3>
-                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                      <span className="flex items-center gap-1 text-purple-600 dark:text-purple-400 font-bold">
-                        <MapPin className="w-3 h-3" />
-                        {post.authorDetails.distance}
-                      </span>
-                      <span>•</span>
-                      <span>{post.timestamp}</span>
-                    </div>
-                  </div>
-                </div>
+      {/* Dynamic Orchestrator Content Area */}
+      <div className="flex-1 overflow-y-auto relative w-full">
+        <AnimatePresence mode="wait">
+          
+          {feedTab === 'vibes' && (
+            <motion.div 
+              key="vibes"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+              className="p-4 sm:p-6 space-y-6 max-w-3xl mx-auto w-full pb-20"
+            >
+              {/* Legacy Vibe Cards (The old Standard Feed) */}
+              {filteredPosts.map(post => (
+                <StandardVibeCard 
+                  key={post.id} 
+                  post={post} 
+                  onSendOpener={onSendOpener}
+                  onProposeDate={onProposeDate}
+                  onJoinGroup={onJoinGroup}
+                />
+              ))}
+            </motion.div>
+          )}
 
-                <span className="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-[10px] font-extrabold">
-                  {post.authorDetails.intent}
-                </span>
-              </div>
+          {feedTab === 'reels' && (
+            <motion.div
+              key="reels"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.4 }}
+              className="w-full h-full p-2 sm:p-4 max-w-lg mx-auto"
+            >
+              <VibeReelsFeed posts={SAMPLE_DATING_POSTS} onSendOpener={onSendOpener} />
+            </motion.div>
+          )}
 
-              {/* Text Body */}
-              <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium leading-relaxed">
-                {post.content}
-              </p>
+          {feedTab === 'radar' && (
+            <motion.div
+              key="radar"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full p-4 max-w-4xl mx-auto"
+            >
+              <RadarFeed posts={SAMPLE_DATING_POSTS} onProfileClick={(post) => onSendOpener?.(post.authorDetails.name, "Hey, looks like we just crossed paths! 📍")} />
+            </motion.div>
+          )}
 
-              {/* Voice Note Pill if available */}
-              {post.voiceNoteUrl && (
-                <div className="p-3 rounded-2xl bg-gradient-to-r from-purple-500/10 to-rose-500/10 border border-purple-500/20 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      className="w-9 h-9 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 text-white flex items-center justify-center shadow-xs hover:scale-105 transition cursor-pointer"
-                    >
-                      ▶
-                    </button>
-                    <div>
-                      <span className="text-xs font-bold text-slate-900 dark:text-slate-100 block">
-                        Voice Vibe Clip ({post.voiceDuration})
-                      </span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-                        Hear {post.authorDetails.name}'s voice note
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {[40, 70, 30, 90, 60, 80, 50, 90, 40, 60].map((h, i) => (
-                      <span key={i} className="w-1 bg-purple-500/50 rounded-full" style={{ height: `${h * 0.25}px` }} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Hinge Prompt Quote Card */}
-              {post.promptAnswer && (
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-purple-500/10 border border-amber-500/30 space-y-1.5">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                    ✨ {post.promptAnswer.category || 'Profile Prompt'}
-                  </span>
-                  <h4 className="font-extrabold text-xs text-slate-900 dark:text-slate-100">
-                    "{post.promptAnswer.question}"
-                  </h4>
-                  <p className="text-xs font-semibold text-purple-700 dark:text-purple-300 italic">
-                    {post.promptAnswer.answer}
-                  </p>
-                </div>
-              )}
-
-              {/* Date Spot Check-In Card */}
-              {post.dateSpot && (
-                <div className="p-4 rounded-2xl border border-rose-500/30 bg-gradient-to-r from-rose-500/5 to-purple-500/5 flex items-center justify-between gap-3">
-                  <div>
-                    <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 text-[10px] font-extrabold mb-1 inline-block">
-                      📍 Date Spot Check-In
-                    </span>
-                    <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-slate-100">
-                      {post.dateSpot.name}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                      {post.dateSpot.location} • {post.dateSpot.price}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onProposeDate?.(post.dateSpot!.name, post.dateSpot!.location)}
-                    className="px-3 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-600 hover:to-purple-700 text-white font-extrabold text-xs shadow-2xs shrink-0 cursor-pointer transition active:scale-95"
-                  >
-                    Let's Go 🥂
-                  </button>
-                </div>
-              )}
-
-              {/* Double Date Group Card */}
-              {post.doubleDateGroup && (
-                <div className="p-4 rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 flex items-center justify-between gap-3">
-                  <div>
-                    <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-extrabold mb-1 inline-block">
-                      👯 Double Date Group
-                    </span>
-                    <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-slate-100">
-                      {post.doubleDateGroup.title}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                      {post.doubleDateGroup.time} • {post.doubleDateGroup.filledSpots}/{post.doubleDateGroup.maxSpots} Spots
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onJoinGroup?.(post.doubleDateGroup!.title)}
-                    className="px-3 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xs shadow-2xs shrink-0 cursor-pointer transition active:scale-95"
-                  >
-                    Join Group ☕
-                  </button>
-                </div>
-              )}
-
-              {/* Photo Attachment if available */}
-              {post.images && post.images.length > 0 && (
-                <div className="rounded-2xl overflow-hidden max-h-80 border border-slate-100 dark:border-slate-800 shadow-xs">
-                  <img src={post.images[0]} alt="Feed Attachment" className="w-full h-full object-cover" />
-                </div>
-              )}
-
-              {/* Footer Action Bar */}
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 hover:text-rose-500 transition cursor-pointer"
-                >
-                  <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-                  <span>Like Vibe</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    const promptText = post.promptAnswer ? `"${post.promptAnswer.question}" → "${post.promptAnswer.answer}"` : post.content;
-                    onSendOpener?.(post.authorDetails.name, promptText);
-                  }}
-                  className="px-3 py-1.5 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/30 flex items-center gap-1.5 transition cursor-pointer text-xs font-extrabold shadow-2xs active:scale-95"
-                >
-                  <MessageCircle className="w-3.5 h-3.5 text-purple-500" />
-                  <span>Send Opener 💬</span>
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+          {feedTab === 'blind' && (
+            <motion.div
+              key="blind"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.4 }}
+              className="w-full h-full p-4 sm:p-6 max-w-3xl mx-auto overflow-y-auto"
+            >
+              <BlindDateFeed posts={filteredPosts} onSendOpener={onSendOpener} />
+            </motion.div>
+          )}
+          
+        </AnimatePresence>
       </div>
     </div>
   );
 });
 
 HeartLinkFeedView.displayName = 'HeartLinkFeedView';
+
+// --- Subcomponent: Legacy Vibe Card extracted for cleaner code ---
+const StandardVibeCard = ({ post, onSendOpener, onProposeDate, onJoinGroup }: { post: DatingFeedPost, onSendOpener: any, onProposeDate: any, onJoinGroup: any }) => {
+  return (
+    <div className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 shadow-sm p-5 space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <img src={post.authorDetails.avatar} alt="Avatar" className="w-12 h-12 rounded-full object-cover ring-2 ring-purple-500/20" />
+          <div>
+            <h3 className="font-black text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              {post.authorDetails.name}, {post.authorDetails.age}
+            </h3>
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span className="flex items-center gap-1 text-purple-600 dark:text-purple-400 font-bold">
+                <MapPin className="w-3 h-3" /> {post.authorDetails.distance}
+              </span>
+              <span>•</span>
+              <span>{post.timestamp}</span>
+            </div>
+          </div>
+        </div>
+        <span className="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 text-[10px] font-extrabold">{post.authorDetails.intent}</span>
+      </div>
+
+      <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium leading-relaxed">{post.content}</p>
+
+      {/* Date Spot */}
+      {post.dateSpot && (
+        <div className="p-4 rounded-2xl border border-rose-500/30 bg-rose-500/5 flex justify-between items-center">
+          <div>
+            <h4 className="font-extrabold text-xs text-slate-900 dark:text-white">📍 {post.dateSpot.name}</h4>
+            <p className="text-[11px] text-slate-500 mt-1">{post.dateSpot.location}</p>
+          </div>
+          <button onClick={() => onProposeDate?.(post.dateSpot!.name, post.dateSpot!.location)} className="px-3 py-2 bg-gradient-to-r from-rose-500 to-purple-600 text-white text-xs font-bold rounded-xl cursor-pointer">Let's Go 🥂</button>
+        </div>
+      )}
+
+      {/* Hinge Prompt */}
+      {post.promptAnswer && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 to-rose-500/10 border border-amber-500/30">
+          <h4 className="font-extrabold text-xs text-slate-900 dark:text-white mb-1">"{post.promptAnswer.question}"</h4>
+          <p className="text-xs font-semibold text-purple-700 dark:text-purple-300 italic">{post.promptAnswer.answer}</p>
+        </div>
+      )}
+
+      {/* Image */}
+      {post.images && post.images.length > 0 && (
+        <div className="rounded-2xl overflow-hidden max-h-80 border border-slate-100 dark:border-slate-800">
+          <img src={post.images[0]} alt="Post" className="w-full h-full object-cover" />
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="flex justify-between items-center pt-3 border-t border-slate-100 dark:border-slate-800">
+        <button className="text-xs font-bold text-rose-500 flex items-center gap-1 cursor-pointer">
+          <Flame className="w-4 h-4" /> Like Vibe
+        </button>
+        <button 
+          onClick={() => onSendOpener(post.authorDetails.name, post.content)}
+          className="px-3 py-1.5 rounded-full bg-purple-500/10 text-purple-600 border border-purple-500/30 text-xs font-extrabold flex items-center gap-1 cursor-pointer"
+        >
+          Send Opener 💬
+        </button>
+      </div>
+    </div>
+  );
+};
