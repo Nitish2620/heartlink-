@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "radar-feed",
+  "type": "registry:component",
+  "title": "Orbiting Match Radar Component",
+  "description": "MNC-grade Orbiting Circles Radar component featuring interactive 3D particle globe canvas, concentric SVG orbit tracks, and glassmorphism match cards.",
+  "dependencies": ["lucide-react", "clsx", "tailwind-merge", "framer-motion"],
+  "files": [
+    {
+      "path": "registry/default/blocks/heartlink/components/RadarFeed.tsx",
+      "type": "registry:component",
+      "target": "components/ui/radar-feed.tsx"
+    }
+  ]
+}
