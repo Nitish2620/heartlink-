@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, MessageCircle, Share2, MapPin, Sparkles } from 'lucide-react';
-import { DatingFeedPost } from './HeartLinkFeedView';
+import type { DatingFeedPost } from './HeartLinkFeedView';
 
 interface VibeReelsFeedProps {
   posts: DatingFeedPost[];

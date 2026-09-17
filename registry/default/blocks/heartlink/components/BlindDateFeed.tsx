@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle, EyeOff, Sparkles, Heart } from 'lucide-react';
-import { DatingFeedPost } from './HeartLinkFeedView';
+import type { DatingFeedPost } from './HeartLinkFeedView';
 
 interface BlindDateFeedProps {
   posts: DatingFeedPost[];
