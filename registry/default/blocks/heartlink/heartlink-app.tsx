@@ -16,7 +16,7 @@ import { SafetyGuardianModal } from './components/SafetyGuardianModal';
 import { AntiGhostingPrompt } from './components/AntiGhostingPrompt';
 import { LocalEventsModal } from './components/LocalEventsModal';
 import { GroupHangoutsModal } from './components/GroupHangoutsModal';
-import { HeartLinkFeedView } from '../social-post-card/HeartLinkFeedView';
+import { HeartLinkFeedView } from './components/HeartLinkFeedView';
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { 
   Search, 
